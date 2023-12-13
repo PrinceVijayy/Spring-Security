@@ -1,0 +1,17 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: cc7fd7e872f15e570034
+            clientSecret: 18269ace31bab4c5865e7a4fa3cfe1ae69d8f375
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://127.0.0.1:3306/securesafe
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
