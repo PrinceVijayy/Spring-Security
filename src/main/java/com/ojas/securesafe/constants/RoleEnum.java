@@ -1,6 +1,6 @@
-package com.ojas.securesafe.security;
+package com.ojas.securesafe.constants;
 
 public enum RoleEnum {
-    ADMIN_ROLE,
-    USER_ROLE
+    ADMIN,
+    USER
 }
