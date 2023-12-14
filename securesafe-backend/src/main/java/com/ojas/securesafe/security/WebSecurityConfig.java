@@ -12,8 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 /**
@@ -23,14 +21,11 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     private final UserDetailsService userDetailsService;
-    private final CorsConfig corsConfig;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsService userDetailsService, CorsConfig corsConfig) {
+    public WebSecurityConfig(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.corsConfig = corsConfig;
     }
 
     @Override
@@ -45,20 +40,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .anyRequest()
-                .permitAll()
-//                    .antMatchers("securesafe/register","securesafe/hello")
-//                        .permitAll()
-//                    .anyRequest()
-//                        .authenticated()
-//                .and()
-//                    .formLogin()
-//                         .loginPage("/login")
-//                    .permitAll()
-//                .and()
-//                    .logout()
-//                        .logoutUrl("/logout")
-//                        .permitAll
+                    .antMatchers("securesafe/register","securesafe/hello")
+                        .permitAll()
+                    .anyRequest()
+                        .authenticated()
+                .and()
+                    .formLogin()
+                         .loginPage("/login")
+                    .permitAll()
+                .and()
+                    .logout()
+                        .logoutUrl("/logout")
+                        .permitAll()
                 .and()
                 .sessionManagement()
                 .sessionAuthenticationStrategy(customAuthenticationStrategy())

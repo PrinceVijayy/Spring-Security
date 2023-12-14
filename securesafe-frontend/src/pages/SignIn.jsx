@@ -1,33 +1,24 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import LoginService from "../services/LoginService";
+import { showAlert } from "tailwind-toastify";
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const credentials = { username, password };
-
-    try {
-      const response = await fetch("http://your-backend-url/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      if (response.ok) {
-        // Handle successful login
-        console.log("Login successful!");
+    await LoginService.login(credentials).then((res) => {
+      if (res.ok) {
+        showAlert("success", "Success", "logged in successfully");
+        navigate("/home");
       } else {
-        // Handle failed login
-        console.error("Login failed.");
+        showAlert("error", "Error", "Invalid credentials");
       }
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
+    });
   };
 
   return (
@@ -107,7 +98,7 @@ const SignIn = () => {
           <div className="text-sm text-end mt-5">
             <span>Don't have an account ? </span>
             <Link
-              href="#"
+              to="/"
               className="font-semibold text-indigo-600 hover:text-indigo-500"
             >
               Register

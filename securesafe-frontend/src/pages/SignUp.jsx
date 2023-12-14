@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { showAlert } from "tailwind-toastify";
+import { Link, useNavigate } from "react-router-dom";
 import RegisterService from "../services/RegisterService";
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -14,8 +16,15 @@ const SignUp = () => {
     }
     const credentials = { username, password };
 
-    await RegisterService.register(credentials).then((res) => {
-      console.log(res.data);
+    await RegisterService.register(credentials).then((response) => {
+      if (response.status === 201) {
+        // Process the successful response
+        console.log(response.data);
+        showAlert("success", "Success", "Registered Successfully");
+        navigate("/signIn");
+      } else {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
     });
   };
   return (
