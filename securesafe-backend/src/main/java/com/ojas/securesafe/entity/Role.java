@@ -1,6 +1,5 @@
 package com.ojas.securesafe.entity;
 
-import com.ojas.securesafe.constants.RoleEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +21,7 @@ public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private RoleEnum name;
+    private String name;
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 

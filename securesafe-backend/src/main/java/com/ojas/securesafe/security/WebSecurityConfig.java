@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 /**
@@ -22,8 +23,15 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+
+    private final UserDetailsService userDetailsService;
+    private final CorsConfig corsConfig;
+
     @Autowired
-    private UserDetailsService userDetailsService;
+    public WebSecurityConfig(UserDetailsService userDetailsService, CorsConfig corsConfig) {
+        this.userDetailsService = userDetailsService;
+        this.corsConfig = corsConfig;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -33,26 +41,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
+                .cors()
+                .and()
                 .authorizeRequests()
-                    .anyRequest()
-                    .authenticated()
+                .anyRequest()
+                .permitAll()
+//                    .antMatchers("securesafe/register","securesafe/hello")
+//                        .permitAll()
+//                    .anyRequest()
+//                        .authenticated()
+//                .and()
+//                    .formLogin()
+//                         .loginPage("/login")
+//                    .permitAll()
+//                .and()
+//                    .logout()
+//                        .logoutUrl("/logout")
+//                        .permitAll
                 .and()
-                    .formLogin()
-                         .loginPage("/login")
-                    .permitAll()
-                .and()
-                    .logout()
-                        .logoutUrl("/logout")
-                        .permitAll()
-                .and()
-                    .sessionManagement()
-                    .sessionAuthenticationStrategy(customAuthenticationStrategy())
-                    .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                    .sessionFixation()
-                        .migrateSession()
-                    .invalidSessionUrl("/invalid-session")
-                    .maximumSessions(1)
-                        .expiredUrl("/session-expired");
+                .sessionManagement()
+                .sessionAuthenticationStrategy(customAuthenticationStrategy())
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .invalidSessionUrl("/invalid-session")
+                .maximumSessions(1)
+                .expiredUrl("/session-expired");
     }
     @Bean
     public SessionAuthenticationStrategy customAuthenticationStrategy() {
@@ -60,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder getPasswordEncoder() {
+    public BCryptPasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
