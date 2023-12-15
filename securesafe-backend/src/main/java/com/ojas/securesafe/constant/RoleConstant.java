@@ -1,4 +1,4 @@
-package com.ojas.securesafe.constants;
+package com.ojas.securesafe.constant;
 
 public class RoleConstant {
     private static final String ADMIN_ROLE = "admin";
